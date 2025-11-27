@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>🎬 CINEPLEX AI - Neural Network Movie Discovery</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+    rel="stylesheet" />
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
+</head>
+
+<body>
+  <!-- Animated Background -->
+  <div class="animated-bg">
+    <div class="gradient-orb orb-1"></div>
+    <div class="gradient-orb orb-2"></div>
+    <div class="gradient-orb orb-3"></div>
+    <div class="gradient-orb orb-4"></div>
+  </div>
+
+  <!-- Top Navigation -->
+  <nav class="top-nav">
+    <div class="nav-content">
+      <div class="nav-brand">
+        <span class="brand-icon">🎬</span>
+        <span class="brand-text">CINEPLEX<span class="ai-glow">AI</span></span>
+      </div>
+      <div class="nav-stats" id="navStats">
+        <span class="stat-item">
+          <span class="stat-icon">🎞️</span>
+          <span class="stat-value">22K</span>
+          <span class="stat-label">Movies</span>
+        </span>
+        <span class="stat-item">
+          <span class="stat-icon">🧠</span>
+          <span class="stat-value">768D</span>
+          <span class="stat-label">Embeddings</span>
+        </span>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Container -->
+  <div class="main-container">
+    <!-- Hero Section -->
+    <section class="hero-section">
+      <div class="hero-content">
+        <div class="hero-badge" data-aos="fade-down" data-aos-duration="800">
+          <span class="badge-dot"></span>
+          <span>Neural Network & Deep Learning</span>
+        </div>
+        <h1 class="hero-title" data-aos="fade-up" data-aos-duration="1000" data-aos-delay="200">
+          Discover Movies<br />
+          <span class="gradient-text">Perfect For You</span>
+        </h1>
+        <p class="hero-subtitle" data-aos="fade-up" data-aos-duration="1000" data-aos-delay="400">
+          Powered by Dual AI Systems (Bi-Encoder + Cross-Encoder)<br />
+          Analyzing 22,000 movies (1874-2025) with intelligent weighting system
+        </p>
+      </div>
+    </section>
+
+    <!-- Search Section -->
+    <section class="search-section">
+      <form id="searchForm" class="search-form" data-aos="fade-up" data-aos-duration="1000" data-aos-delay="600">
+        <div class="search-wrapper">
+          <div class="search-icon-left">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="8"></circle>
+              <path d="m21 21-4.35-4.35"></path>
+            </svg>
+          </div>
+          <input type="text" id="searchInput" class="search-input-modern"
+            placeholder="What kind of movie are you craving? Try 'intense action thriller' or 'emotional drama'" required
+            autocomplete="off" />
+          <button type="submit" id="searchButton" class="search-button-modern">
+            <span class="button-icon">✨</span>
+            <span class="button-text">Discover</span>
+          </button>
+        </div>
+      </form>
+
+      <!-- Quick Examples -->
+      <div class="quick-examples" data-aos="fade-up" data-aos-duration="1000" data-aos-delay="800">
+        <span class="examples-label">Try:</span>
+        <button class="example-chip" onclick="fillQuery('mind-bending sci-fi')" data-aos="zoom-in" data-aos-duration="600" data-aos-delay="900">🌌 Mind-Bending Sci-Fi</button>
+        <button class="example-chip" onclick="fillQuery('emotional journey about loss')" data-aos="zoom-in" data-aos-duration="600" data-aos-delay="1000">💔 Emotional Journey</button>
+        <button class="example-chip" onclick="fillQuery('intense action packed')" data-aos="zoom-in" data-aos-duration="600" data-aos-delay="1100">💥 Intense Action</button>
+        <button class="example-chip" onclick="fillQuery('horror thriller')" data-aos="zoom-in" data-aos-duration="600" data-aos-delay="1200">👻 Horror Thriller</button>
+        <button class="example-chip" onclick="fillQuery('superhero epic battles')" data-aos="zoom-in" data-aos-duration="600" data-aos-delay="1300">🦸 Superhero Epic</button>
+      </div>
+
+      <!-- Loading State -->
+      <div id="loadingAnimation" class="loading-state" style="display: none">
+        <div class="loading-container">
+          <div class="loading-animation">
+            <div class="loading-orb"></div>
+            <div class="particle particle-1"></div>
+            <div class="particle particle-2"></div>
+            <div class="particle particle-3"></div>
+            <div class="particle particle-4"></div>
+            <div class="particle particle-5"></div>
+            <div class="particle particle-6"></div>
+            <div class="ai-brain">
+              <div class="brain-pulse"></div>
+              <div class="brain-icon">🧠</div>
+            </div>
+          </div>
+          <div class="loading-progress">
+            <div class="progress-bar"></div>
+          </div>
+          <div class="loading-text-wrapper">
+            <p class="loading-text">
+              <span class="loading-label">AI is analyzing your preferences</span>
+              <span class="loading-dots">
+                <span>.</span><span>.</span><span>.</span>
+              </span>
+            </p>
+            <p class="loading-subtitle">
+              <span class="subtitle-step" data-step="1">⚡ Parsing query</span>
+              <span class="subtitle-step" data-step="2">🔍 Searching 22K movies</span>
+              <span class="subtitle-step" data-step="3">🧠 Deep learning analysis</span>
+              <span class="subtitle-step" data-step="4">✨ Ranking results</span>
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Info Message -->
+      <div id="infoMessage" class="info-banner" data-aos="fade-up" data-aos-duration="1000" data-aos-delay="1400">
+        <span class="info-icon">💡</span>
+        <span class="info-text">
+          <strong>Pro Tip:</strong> Specify genre, year, or mood — AI adapts weights automatically!
+        </span>
+      </div>
+
+      <!-- Error Message -->
+      <div id="errorMessage" class="error-banner" style="display: none"></div>
+    </section>
+
+    <!-- Results Section -->
+    <section id="resultsSection" class="results-section" style="display: none">
+      <div class="results-header-container">
+        <h2 class="results-title">
+          <span class="results-icon">✨</span>
+          <span>Perfect Matches For You</span>
+        </h2>
+        <p class="results-description">
+          AI-curated with intent analysis, Cross-Encoder re-ranking & dynamic diversity
+        </p>
+      </div>
+      <div id="resultsContainer" class="results-grid"></div>
+    </section>
+  </div>
+
+  <!-- Side Panel (collapsed by default on mobile) -->
+  <button class="panel-toggle" id="panelToggle" onclick="togglePanel()">
+    <span class="toggle-icon">📊</span>
+  </button>
+
+  <aside class="side-panel" id="sidePanel">
+    <div class="panel-section">
+      <h3 class="panel-heading">
+        <span class="panel-icon">🎓</span>
+        About This System
+      </h3>
+      <div class="panel-card">
+        <p class="panel-title">Advanced Deep Learning Project</p>
+        <p class="panel-subtitle">Neural Network & Deep Learning Course</p>
+        <div class="specs-grid">
+          <div class="spec-item">
+            <div class="spec-label">Bi-Encoder</div>
+            <div class="spec-value">BAAI/bge-base-en-v1.5</div>
+          </div>
+          <div class="spec-item">
+            <div class="spec-label">Cross-Encoder</div>
+            <div class="spec-value">ms-marco-MiniLM-L-12</div>
+          </div>
+          <div class="spec-item">
+            <div class="spec-label">Dataset</div>
+            <div class="spec-value">22,002 movies (1874-2025)</div>
+          </div>
+          <div class="spec-item">
+            <div class="spec-label">Embeddings</div>
+            <div class="spec-value">768 dimensions</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel-section">
+      <h3 class="panel-heading">
+        <span class="panel-icon">🧠</span>
+        AI Pipeline
+      </h3>
+      <div class="pipeline-steps">
+        <div class="pipeline-step">
+          <div class="step-number">1</div>
+          <div class="step-content">
+            <div class="step-title">Intent Analysis</div>
+            <div class="step-desc">Extract year/genre/weights</div>
+          </div>
+        </div>
+        <div class="pipeline-step">
+          <div class="step-number">2</div>
+          <div class="step-content">
+            <div class="step-title">Query Enhancement</div>
+            <div class="step-desc">Thai + mood/style expansion</div>
+          </div>
+        </div>
+        <div class="pipeline-step">
+          <div class="step-number">3</div>
+          <div class="step-content">
+            <div class="step-title">Semantic Search</div>
+            <div class="step-desc">768-dim bi-encoder top-100</div>
+          </div>
+        </div>
+        <div class="pipeline-step">
+          <div class="step-number">4</div>
+          <div class="step-content">
+            <div class="step-title">Hybrid Scoring</div>
+            <div class="step-desc">Intent-aware weights + bonuses</div>
+          </div>
+        </div>
+        <div class="pipeline-step">
+          <div class="step-number">5</div>
+          <div class="step-content">
+            <div class="step-title">Cross-Encoder</div>
+            <div class="step-desc">Deep re-rank top-30</div>
+          </div>
+        </div>
+        <div class="pipeline-step">
+          <div class="step-number">6</div>
+          <div class="step-content">
+            <div class="step-title">Diversity Filter</div>
+            <div class="step-desc">Dynamic penalty (0.05-0.20)</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel-section">
+      <h3 class="panel-heading">
+        <span class="panel-icon">📊</span>
+        Live Statistics
+      </h3>
+      <div id="statsContainer" class="stats-grid">
+        <div class="stat-card loading">Loading...</div>
+      </div>
+    </div>
+  </aside>
+  </div>
+
+  <!-- Footer -->
+  <footer class="page-footer">
+    <p>Built with ❤️ using Dual Transformer AI • Intent-Aware Weighting • Cross-Encoder Re-ranking • Flask</p>
+  </footer>
+
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <script>
+    // Initialize AOS
+    AOS.init({
+      duration: 800,
+      easing: 'ease-out',
+      once: true,
+      offset: 50
+    });
+
+    // Parallax effect for background
+    let lastScrollY = window.scrollY;
+    let ticking = false;
+
+    function updateParallax() {
+      const scrollY = window.scrollY;
+      const bg = document.querySelector('.animated-bg');
+      const nav = document.querySelector('.top-nav');
+      
+      // Parallax background
+      if (bg) {
+        bg.style.transform = `translateY(${scrollY * 0.3}px)`;
+      }
+      
+      // Navbar scroll effect
+      if (nav) {
+        if (scrollY > 50) {
+          nav.classList.add('scrolled');
+        } else {
+          nav.classList.remove('scrolled');
+        }
+      }
+      
+      ticking = false;
+    }
+
+    window.addEventListener('scroll', () => {
+      lastScrollY = window.scrollY;
+      
+      if (!ticking) {
+        window.requestAnimationFrame(updateParallax);
+        ticking = true;
+      }
+    });
+
+    // Intersection Observer for cards
+    const cardObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('scroll-visible');
+        }
+      });
+    }, {
+      threshold: 0.1,
+      rootMargin: '0px 0px -50px 0px'
+    });
+
+    // Toggle side panel
+    function togglePanel() {
+      const panel = document.getElementById('sidePanel');
+      panel.classList.toggle('panel-open');
+    }
+
+    // Fill query from example
+    function fillQuery(query) {
+      document.getElementById("searchInput").value = query;
+      document.getElementById("searchInput").focus();
+      // Auto scroll to search
+      document.querySelector('.search-section').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    // Animate loading steps
+    function animateLoadingSteps() {
+      const steps = document.querySelectorAll('.subtitle-step');
+      let currentStep = 0;
+
+      const showNextStep = () => {
+        steps.forEach(step => step.classList.remove('active'));
+        if (currentStep < steps.length) {
+          steps[currentStep].classList.add('active');
+          currentStep = (currentStep + 1) % steps.length;
+        }
+      };
+
+      showNextStep(); // Show first step immediately
+      return setInterval(showNextStep, 1500); // Change every 1.5 seconds
+    }
+
+    let loadingInterval = null;
+
+    // Load stats
+    fetch("/stats")
+      .then((res) => res.json())
+      .then((data) => {
+        document.getElementById("statsContainer").innerHTML = `
+            <div class="stat-card">
+              <div class="stat-card-value">${data.total_movies.toLocaleString()}</div>
+              <div class="stat-card-label">Total Movies</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-card-value">${data.year_range.min} - ${data.year_range.max}</div>
+              <div class="stat-card-label">Year Range</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-card-value">⭐ ${data.average_rating.toFixed(2)}</div>
+              <div class="stat-card-label">Avg Rating</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-card-value">${data.embedding_dims}D</div>
+              <div class="stat-card-label">Embeddings</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-card-value">${(data.total_votes / 1000000).toFixed(1)}M</div>
+              <div class="stat-card-label">Total Votes</div>
+            </div>
+          `;
+      })
+      .catch((err) => {
+        console.error("Failed to load stats:", err);
+        document.getElementById("statsContainer").innerHTML = '<div class="stat-card error">Failed to load</div>';
+      });
+
+    // Handle search
+    document
+      .getElementById("searchForm")
+      .addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        const query = document.getElementById("searchInput").value.trim();
+        if (!query) return;
+
+        // Show loading
+        document.getElementById("loadingAnimation").style.display = "flex";
+        document.getElementById("resultsSection").style.display = "none";
+        document.getElementById("errorMessage").style.display = "none";
+        document.getElementById("infoMessage").style.display = "none";
+        document.getElementById("searchButton").disabled = true;
+
+        // Start loading steps animation
+        loadingInterval = animateLoadingSteps();
+
+        try {
+          const response = await fetch("/search", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ query }),
+          });
+
+          const data = await response.json();
+
+          if (!response.ok) {
+            throw new Error(data.error || "Search failed");
+          }
+
+          console.log("Received data:", data);
+          console.log("Results:", data.results);
+          console.log("Results length:", data.results ? data.results.length : 0);
+
+          // Display results
+          displayResults(data.results);
+
+          document.getElementById("resultsSection").style.display = "block";
+          // Scroll to results
+          setTimeout(() => {
+            document.getElementById("resultsSection").scrollIntoView({ behavior: 'smooth' });
+          }, 100);
+        } catch (error) {
+          document.getElementById("errorMessage").innerHTML = `
+              <span class="error-icon">❌</span>
+              <span class="error-text">${error.message}</span>
+            `;
+          document.getElementById("errorMessage").style.display = "flex";
+        } finally {
+          document.getElementById("loadingAnimation").style.display = "none";
+          document.getElementById("searchButton").disabled = false;
+
+          // Clear loading steps animation
+          if (loadingInterval) {
+            clearInterval(loadingInterval);
+            loadingInterval = null;
+          }
+        }
+      });
+
+    function displayResults(results) {
+      const container = document.getElementById("resultsContainer");
+
+      console.log("displayResults called");
+      console.log("Container element:", container);
+      console.log("Results to display:", results);
+
+      if (results.length === 0) {
+        container.innerHTML = '<div class="no-results">No movies found. Try a different query!</div>';
+        return;
+      }
+
+      container.innerHTML = results
+        .map(
+          (movie, index) => `
+                        <div class="movie-card-modern" data-aos="fade-up" data-aos-duration="600" data-aos-delay="${index * 50}" style="${movie.backdrop_url ? `background-image: linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(0,0,0,0.9)), url('${movie.backdrop_url}'); background-size: cover; background-position: center;` : ''}">
+                            <div class="card-rank-badge">#${movie.rank}</div>
+                            
+                            <div class="card-content ${movie.poster_url ? 'has-poster' : ''}">
+                                ${movie.poster_url ? `<img src="${movie.poster_url}" alt="${movie.title}" class="movie-poster">` : ''}
+                                
+                                <div class="card-info">
+                                    <div class="card-main-content">
+                                        <h3 class="card-title">${movie.title}</h3>
+                                        
+                                        <div class="card-metrics">
+                                            <div class="metric metric-match">
+                                                <span class="metric-icon">🎯</span>
+                                                <span class="metric-value">${movie.match.toFixed(1)}%</span>
+                                                <span class="metric-label">Match</span>
+                                            </div>
+                                            <div class="metric metric-rating">
+                                                <span class="metric-icon">⭐</span>
+                                                <span class="metric-value">${(movie.tmdb_rating || movie.rating).toFixed(1)}</span>
+                                                <span class="metric-label">Rating</span>
+                                            </div>
+                                            <div class="metric metric-year">
+                                                <span class="metric-icon">📅</span>
+                                                <span class="metric-value">${movie.year}</span>
+                                                <span class="metric-label">Year</span>
+                                            </div>
+                                        </div>
+
+                                        ${movie.genres.length > 0 ? `
+                                            <div class="card-genres">
+                                                ${movie.genres.map(g => `<span class="genre-pill">${g}</span>`).join('')}
+                                            </div>
+                                        ` : ''}
+
+                                        <div class="card-meta">
+                                            ${movie.director ? `
+                                                <div class="meta-row">
+                                                    <span class="meta-icon">🎬</span>
+                                                    <span class="meta-text"><strong>Director:</strong> ${movie.director}</span>
+                                                </div>
+                                            ` : ''}
+                                            ${movie.cast.length > 0 ? `
+                                                <div class="meta-row">
+                                                    <span class="meta-icon">👥</span>
+                                                    <span class="meta-text"><strong>Cast:</strong> ${movie.cast.slice(0, 3).join(', ')}</span>
+                                                </div>
+                                            ` : ''}
+                                        </div>
+
+                                        <div class="synopsis-content" id="synopsis-${movie.rank}">
+                                            <p>${movie.overview}</p>
+                                        </div>
+                                    </div>
+
+                                    <div class="card-actions">
+                                        ${movie.trailer_id ? `
+                                            <a href="https://www.youtube.com/watch?v=${movie.trailer_id}" target="_blank" class="trailer-btn">
+                                                <span class="trailer-icon">▶️</span> Watch Trailer
+                                            </a>
+                                        ` : ''}
+
+                                        <button class="synopsis-btn" onclick="toggleSynopsis(${movie.rank})">
+                                            <span class="synopsis-icon" id="icon-${movie.rank}">📖</span>
+                                            <span id="text-${movie.rank}">View Synopsis</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `
+        )
+        .join("");
+
+      console.log("HTML generated, container innerHTML length:", container.innerHTML.length);
+      console.log("Container children count:", container.children.length);
+
+      // Observe cards for scroll animation
+      setTimeout(() => {
+        document.querySelectorAll('.movie-card-modern').forEach(card => {
+          cardObserver.observe(card);
+        });
+      }, 100);
+
+      // Refresh AOS for newly added elements
+      AOS.refresh();
+    }
+
+    function toggleSynopsis(rank) {
+      const synopsis = document.getElementById(`synopsis-${rank}`);
+      const icon = document.getElementById(`icon-${rank}`);
+      const text = document.getElementById(`text-${rank}`);
+      const card = synopsis.closest('.movie-card-modern');
+
+      if (synopsis.classList.contains('expanded')) {
+        synopsis.classList.remove('expanded');
+        card.classList.remove('card-expanded');
+        icon.textContent = "📖";
+        text.textContent = "View Synopsis";
+      } else {
+        synopsis.classList.add('expanded');
+        card.classList.add('card-expanded');
+        icon.textContent = "📕";
+        text.textContent = "Hide Synopsis";
+        
+        // Smooth scroll to show expanded content
+        setTimeout(() => {
+          card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }, 200);
+      }
+    }
+
+    // Remove old observer code
+  </script>
+</body>
+
+</html>
